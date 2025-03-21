@@ -1,7 +1,7 @@
 ﻿
 namespace RiskDev.Models.Roles;
 
-internal class ExpiredRule : IRiskRule
+public class ExpiredRule : IRiskRule
 {
     public RiskCategory? EvaluateRisk(ITrade trade, DateTime DateReference)
     {

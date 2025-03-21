@@ -2,7 +2,7 @@
 
 namespace RiskDev.Models.Roles;
 
-internal class MediumRisk : IRiskRule
+public class MediumRisk : IRiskRule
 {
     public RiskCategory? EvaluateRisk(ITrade trade, DateTime DateReference)
     {

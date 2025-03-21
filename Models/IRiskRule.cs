@@ -1,7 +1,7 @@
 ﻿
 namespace RiskDev.Models;
 
-internal interface IRiskRule
+public interface IRiskRule
 {
     RiskCategory? EvaluateRisk(ITrade trade, DateTime DateReference);
 }

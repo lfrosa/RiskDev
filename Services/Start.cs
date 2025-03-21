@@ -2,10 +2,10 @@ using System.Globalization;
 using RiskDev.Models;
 namespace RiskDev.Services;
 
-public class Start
+public class Start : StartBase
 {
 
-    private DateTime dateReference = new();
+    private DateTime? dateReference = new();
     private int operationsNumber = 0;
     private List<Trade> trades = [];
 
@@ -15,11 +15,12 @@ public class Start
         GetAmount();
         GetLines();
         Submit();
-
     }
 
     public void GetLines()
     {
+        Console.WriteLine($"Entre com o(s) {operationsNumber} registro(s) de operação:");
+        
         for (int x = 0; x < operationsNumber; x++)
         {
             var enteredOperation = Console.ReadLine()?.Split(" ") ?? [];
@@ -31,24 +32,38 @@ public class Start
                 continue;
             }
 
-            double resultValue = 0;
-            DateTime resultDate = new();
+            double? resultValue = 0;
+            DateTime? resultDate = new();
 
-            double.TryParse(enteredOperation[0], out resultValue);
-            DateTime.TryParseExact(enteredOperation[2], "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out resultDate);
+            if ((resultDate = StringToDate(enteredOperation[2])) is null)
+            {
+                Console.WriteLine("Data inválida, tente novamente");
+                x--;
+                continue;
+            }
 
-            string[] posibilities = { "private", "public" };
+            if ((resultValue = StringToDouble(enteredOperation[0])) is null)
+            {
+                Console.WriteLine("Valor inválido, tente novamente");
+                x--;
+                continue;
+            }
 
-            if (!posibilities.Contains(enteredOperation[1].ToLower()))
+            if (!IsSectorValid(enteredOperation[1]))
             {
                 Console.WriteLine("Setor inválido, tente novamente");
                 x--;
                 continue;
             }
 
-
-            trades.Add(new Trade(resultValue, enteredOperation[1], resultDate));
+            trades.Add(new Trade(resultValue.Value, enteredOperation[1], resultDate.Value));
         }
+    }
+
+    private bool IsSectorValid(string sector)
+    {
+        string[] posibilities = { "private", "public" };
+        return posibilities.Contains(sector.ToLower());
     }
 
 
@@ -56,13 +71,15 @@ public class Start
     {
         var service = new RiskCategorizationService();
 
+        Console.WriteLine("Resultados:\n");
+
+
         foreach (var trade in trades)
         {
-            var riskCategory = service.Evaluate(trade, dateReference);
+            var riskCategory = service.Evaluate(trade, dateReference!.Value);
 
             Console.WriteLine(Enum.GetName(riskCategory)?.ToUpper() ?? "ERRO");
         }
-
     }
 
     private void GetReferenceDate()
@@ -70,12 +87,13 @@ public class Start
         Console.WriteLine("Entre com uma data de referência:");
         string? enteredDate = Console.ReadLine();
 
-        while (!DateTime.TryParseExact(enteredDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateReference))
+        while ((dateReference = StringToDate(enteredDate ?? "")) is null)
         {
             Console.WriteLine("Entre com uma data de referência válida:");
             enteredDate = Console.ReadLine();
         }
     }
+
 
     private void GetAmount()
     {
@@ -88,6 +106,4 @@ public class Start
             operactionsCont = Console.ReadLine();
         }
     }
-
-
 }

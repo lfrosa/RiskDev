@@ -6,7 +6,6 @@ using RiskDev.Models.Roles;
 namespace RiskDev.Services;
 public class RiskCategorizationService
 {
-
     private List<IRiskRule> rules = [];
 
     public RiskCategorizationService()
@@ -25,8 +24,7 @@ public class RiskCategorizationService
             if (result is not null)
                 return result.Value;
         }
-
-        return RiskCategory.None;
+        return RiskCategory.Insufficient;
 
     }
 

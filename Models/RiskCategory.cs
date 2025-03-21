@@ -5,5 +5,5 @@ public enum RiskCategory
     Expired,
     HighRisk,
     MediumRisk,
-    None
+    Insufficient
 }
