@@ -17,5 +17,7 @@ public interface ITrade
     /// Indica a expectativa da data do próximo pagamento do cliente ao banco
     /// </summary>
     DateTime NextPaymentDate { get; }
+  
+    bool IsPep { get; }
 
 }

@@ -20,12 +20,12 @@ public class Start : StartBase
     public void GetLines()
     {
         Console.WriteLine($"Entre com o(s) {operationsNumber} registro(s) de operação:");
-        
+
         for (int x = 0; x < operationsNumber; x++)
         {
             var enteredOperation = Console.ReadLine()?.Split(" ") ?? [];
 
-            if (enteredOperation.Length < 3)
+            if (enteredOperation.Length < 4)
             {
                 Console.WriteLine("Operação inválida, tente novamente");
                 x--;
@@ -56,7 +56,7 @@ public class Start : StartBase
                 continue;
             }
 
-            trades.Add(new Trade(resultValue.Value, enteredOperation[1], resultDate.Value));
+            trades.Add(new Trade(resultValue.Value, enteredOperation[1], resultDate.Value, bool.Parse(enteredOperation[3])));
         }
     }
 
@@ -77,8 +77,9 @@ public class Start : StartBase
         foreach (var trade in trades)
         {
             var riskCategory = service.Evaluate(trade, dateReference!.Value);
+            Console.ForegroundColor = riskCategory.Color;
 
-            Console.WriteLine(Enum.GetName(riskCategory)?.ToUpper() ?? "ERRO");
+            Console.WriteLine(Enum.GetName(riskCategory.Category)?.ToUpper() ?? "ERRO");
         }
     }
 
@@ -93,6 +94,16 @@ public class Start : StartBase
             enteredDate = Console.ReadLine();
         }
     }
+
+    private string GetContext()
+    {
+        string context = "WM"; // IB
+                               //WM - pep
+
+        return context;
+
+    }
+
 
 
     private void GetAmount()

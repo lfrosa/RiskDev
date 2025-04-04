@@ -1,9 +1,19 @@
 namespace RiskDev.Models;
 
-public enum RiskCategory
+public class RiskCategory
+{
+    public EumRiskCategory Category { get; set; }
+    public  ConsoleColor  Color { get; set; }
+
+
+}
+
+public enum EumRiskCategory
 {
     Expired,
     HighRisk,
     MediumRisk,
-    Insufficient
+    Insufficient,
+    Pep
 }
+

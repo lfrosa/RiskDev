@@ -6,8 +6,14 @@ public class MediumRisk : IRiskRule
 {
     public RiskCategory? EvaluateRisk(ITrade trade, DateTime DateReference)
     {
-        if (trade.ClientSector.ToLower() == "public")
-            return RiskCategory.MediumRisk;
+        if (trade.Value > 1_000_000 && trade.ClientSector.ToLower() == "public")
+        {
+            return new RiskCategory
+            {
+                Category = EumRiskCategory.MediumRisk,
+                Color = ConsoleColor.Yellow
+            };
+        }
 
         return null;
     }

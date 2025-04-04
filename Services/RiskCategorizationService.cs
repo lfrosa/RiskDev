@@ -10,10 +10,11 @@ public class RiskCategorizationService
 
     public RiskCategorizationService()
     {
+        rules.Add(new PepRule());
         rules.Add(new ExpiredRule());
-        rules.Add(new NoneRule());
         rules.Add(new HighRiskRule());
         rules.Add(new MediumRisk());
+        rules.Add(new NoneRule());
     }
     public RiskCategory Evaluate(ITrade trade, DateTime dateReference)
     {
@@ -22,9 +23,13 @@ public class RiskCategorizationService
             var result = rule.EvaluateRisk(trade, dateReference);
 
             if (result is not null)
-                return result.Value;
+                return result;
         }
-        return RiskCategory.Insufficient;
+        return new RiskCategory
+        {
+            Category = EumRiskCategory.Insufficient,
+            Color = ConsoleColor.White
+        };
 
     }
 
